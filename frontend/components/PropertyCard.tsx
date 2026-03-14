@@ -21,8 +21,15 @@ interface PropertyProps {
 }
 
 const PropertyCard = ({ property }: PropertyProps) => {
-  const firstImage = property.images && property.images.length > 0 
-    ? `${BASE_URL}${property.images[0]}`
+  // ImgBB returns full URLs (https://i.ibb.co/...), legacy local images use /uploads/...
+  const resolveImage = (src: string) => {
+    if (!src) return '/assets/img/all-images/property/prop-img1.png';
+    if (src.startsWith('http')) return src; // ImgBB or any absolute URL
+    return `${BASE_URL}${src}`; // Legacy local path fallback
+  };
+
+  const firstImage = property.images && property.images.length > 0
+    ? resolveImage(property.images[0])
     : '/assets/img/all-images/property/prop-img1.png';
 
   return (
