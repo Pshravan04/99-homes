@@ -8,11 +8,26 @@ import Image from 'next/image';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/properties';
 
+interface Property {
+  _id: string;
+  name: string;
+  location: string;
+  address: string;
+  price: string;
+  configuration: string;
+  area: string;
+  possessionDate: string;
+  description: string;
+  propertyType: string;
+  images: string[];
+  amenities: string[];
+}
+
 export default function PropertyDetailsPage() {
   const params = useParams();
   const id = params.id;
   
-  const [property, setProperty] = useState(null);
+  const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
