@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-const API_URL = 'http://localhost:5000/api/properties';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/properties';
 
 export default function AddPropertyPage() {
   const router = useRouter();

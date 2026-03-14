@@ -5,7 +5,7 @@ import PropertyCard from '@/components/PropertyCard';
 import { Search, MapPin, Building2, Users2, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const API_URL = 'http://localhost:5000/api/properties';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/properties';
 
 export default function Home() {
   const [properties, setProperties] = useState<any[]>([]);

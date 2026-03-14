@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, BedDouble, Calendar, Square, ArrowRight } from 'lucide-react';
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
+
 interface PropertyProps {
   property: {
     _id: string;
@@ -20,7 +22,7 @@ interface PropertyProps {
 
 const PropertyCard = ({ property }: PropertyProps) => {
   const firstImage = property.images && property.images.length > 0 
-    ? `http://localhost:5000${property.images[0]}`
+    ? `${BASE_URL}${property.images[0]}`
     : '/assets/img/all-images/property/prop-img1.png';
 
   return (

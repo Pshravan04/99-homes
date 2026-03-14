@@ -6,7 +6,7 @@ import { MapPin, BedDouble, Calendar, Square, Check, ArrowLeft, Phone, Mail, Sha
 import Link from 'next/link';
 import Image from 'next/image';
 
-const API_URL = 'http://localhost:5000/api/properties';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/properties';
 
 export default function PropertyDetailsPage() {
   const params = useParams();

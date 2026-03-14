@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import PropertyCard from '@/components/PropertyCard';
 import { MapPin, Filter, Search, ChevronDown } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api/properties';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/properties';
 
 export default function ListingPage() {
   const [properties, setProperties] = useState([]);
