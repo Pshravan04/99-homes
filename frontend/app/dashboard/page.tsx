@@ -20,9 +20,19 @@ import Link from 'next/link';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/properties';
 
+interface Property {
+  _id: string;
+  name: string;
+  location: string;
+  price: string;
+  propertyType: string;
+  images: string[];
+  status: string;
+}
+
 export default function AdminDashboard() {
   const router = useRouter();
-  const [properties, setProperties] = useState([]);
+  const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
