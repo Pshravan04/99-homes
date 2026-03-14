@@ -313,6 +313,7 @@ export default function AddPropertyPage() {
                   <button 
                     type="button" 
                     onClick={() => removeImage(i)}
+                    suppressHydrationWarning
                     className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <X className="w-4 h-4" />
@@ -334,6 +335,7 @@ export default function AddPropertyPage() {
              <button 
                 type="submit" 
                 disabled={loading}
+                suppressHydrationWarning
                 className="flex-1 bg-[#D4ED31] text-[#073B3A] py-5 rounded-2xl font-black text-xl flex items-center justify-center gap-3 hover:bg-[#073B3A] hover:text-white transition-all transform active:scale-95 shadow-2xl shadow-[#D4ED31]/20 disabled:opacity-50"
              >
                 {loading ? (
