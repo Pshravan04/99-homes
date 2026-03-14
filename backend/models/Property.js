@@ -14,6 +14,8 @@ const PropertySchema = new mongoose.Schema({
     propertyType: { type: String }, // Villa, Studio, etc.
     area: { type: String }, // e.g. "413 - 612 sq.ft"
     units: { type: Number },
+    reraNumber: { type: String },
+    reraQrCode: { type: String }, // URL to RERA QR code image
     createdAt: { type: Date, default: Date.now }
 });
 

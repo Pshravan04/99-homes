@@ -21,6 +21,8 @@ interface Property {
   propertyType: string;
   images: string[];
   amenities: string[];
+  reraNumber?: string;
+  reraQrCode?: string;
 }
 
 export default function PropertyDetailsPage() {
@@ -30,17 +32,22 @@ export default function PropertyDetailsPage() {
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
+
+  const resolveImage = (src: string) => {
+    if (!src) return '/assets/img/all-images/property/prop-img1.png';
+    if (src.startsWith('http')) return src;
+    return `${BASE_URL}${src}`;
+  };
+
   useEffect(() => {
     if (!id) return;
     const fetchProperty = async () => {
       try {
         const res = await fetch(`${API_URL}/${id}`);
-        const contentType = res.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
+        if (res.ok) {
           const data = await res.json();
           setProperty(data);
-        } else {
-          console.error("Received non-JSON response for property details");
         }
       } catch (err) {
         console.error('Error fetching property details:', err);
@@ -89,18 +96,18 @@ export default function PropertyDetailsPage() {
              {/* Main Image */}
              <div className="relative rounded-2xl overflow-hidden shadow-xl">
                 <Image 
-                  src={property.images && property.images.length > 0 ? `http://localhost:5000${property.images[0]}` : '/assets/img/all-images/property/prop-img1.png'} 
+                  src={resolveImage(property.images?.[0])} 
                   alt={property.name}
                   fill
                   className="object-cover"
                 />
              </div>
              {/* Thumbnail Grid */}
-             <div className="grid grid-cols-2 gap-4">
+             <div className="grid grid-cols-2 gap-4 h-full">
                 {[1, 2, 3, 4].map((idx) => (
-                  <div key={idx} className="relative rounded-2xl overflow-hidden shadow-lg border border-white">
+                  <div key={idx} className="relative rounded-2xl overflow-hidden shadow-lg border border-white h-full">
                      <Image 
-                        src={property.images && property.images.length > idx ? `http://localhost:5000${property.images[idx]}` : (property.images && property.images.length > 0 ? `http://localhost:5000${property.images[0]}` : '/assets/img/all-images/property/prop-img1.png')} 
+                        src={resolveImage(property.images?.[idx] || property.images?.[0])} 
                         alt={`${property.name} thumbnail`}
                         fill
                         className="object-cover opacity-80 hover:opacity-100 transition-opacity"
@@ -120,7 +127,7 @@ export default function PropertyDetailsPage() {
             <div className="lg:w-2/3 space-y-12">
                <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="bg-[#D4ED31] text-[#073B3A] px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest">{property.propertyType || 'Villa'}</span>
+                    <span className="bg-[#D4ED31] text-[#073B3A] px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest">{property.propertyType || 'Apartment'}</span>
                     <span className="text-gray-500 font-medium">For Sale</span>
                   </div>
                   <h1 className="text-4xl md:text-5xl font-bold text-[#073B3A]">{property.name}</h1>
@@ -170,6 +177,32 @@ export default function PropertyDetailsPage() {
                   </div>
                </div>
 
+               {/* MahaRERA Section */}
+               {(property.reraNumber || property.reraQrCode) && (
+                 <div className="bg-[#073B3A] p-8 rounded-2xl shadow-xl text-white">
+                    <div className="flex flex-col md:flex-row items-center gap-8">
+                       <div className="flex-1 space-y-4">
+                          <h3 className="text-2xl font-bold">MahaRERA Registered</h3>
+                          <p className="text-gray-300">This property is registered under Maharashtra Real Estate Regulatory Authority. Your investment is protected by regulatory standards.</p>
+                          <div className="bg-white/10 border border-white/20 p-4 rounded-xl inline-block">
+                             <p className="text-xs uppercase font-bold tracking-widest text-[#D4ED31] mb-1">Registration No.</p>
+                             <p className="text-2xl font-black tracking-wider">{property.reraNumber || 'Not Provided'}</p>
+                          </div>
+                       </div>
+                       {property.reraQrCode && (
+                         <div className="bg-white p-4 rounded-2xl shrink-0 shadow-lg">
+                            <img 
+                              src={resolveImage(property.reraQrCode)} 
+                              alt="MahaRERA QR Code" 
+                              className="w-32 h-32 object-contain"
+                            />
+                            <p className="text-[10px] text-center text-[#073B3A] font-bold mt-2 uppercase">Scan to Verify</p>
+                         </div>
+                       )}
+                    </div>
+                 </div>
+               )}
+
                {/* Description */}
                <div className="space-y-6">
                   <h3 className="text-2xl font-bold text-[#073B3A]">Description</h3>
@@ -198,26 +231,26 @@ export default function PropertyDetailsPage() {
             <div className="lg:w-1/3">
                <div className="sticky top-24 space-y-8">
                   <div className="bg-[#073B3A] text-white p-8 rounded-2xl shadow-xl">
-                    <h3 className="text-2xl font-bold mb-6">Inquiry About Home</h3>
-                    <form className="space-y-4">
-                       <input type="text" placeholder="Your Name" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]" />
-                       <input type="email" placeholder="Email Address" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]" />
-                       <textarea rows={4} placeholder="Your Message" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]"></textarea>
-                       <button 
-                         suppressHydrationWarning
-                         className="w-full bg-[#D4ED31] text-[#073B3A] py-3.5 rounded-lg font-bold hover:bg-white transition-all transform active:scale-95"
+                    <h3 className="text-2xl font-bold mb-6">Talk to the Expert</h3>
+                    <div className="space-y-6">
+                       <p className="text-gray-300">Interested in this property? Get in touch with our team for exclusive details and site visits.</p>
+                       <a 
+                         href="https://wa.link/srrb9n" 
+                         target="_blank" 
+                         rel="noopener noreferrer"
+                         className="w-full bg-[#D4ED31] text-[#073B3A] py-4 rounded-xl font-bold hover:bg-white transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-lg"
                        >
-                         Send Inquiry
-                       </button>
-                    </form>
+                         Contact via WhatsApp
+                       </a>
+                    </div>
                   </div>
 
                   <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-                     <h4 className="text-xl font-bold text-[#073B3A]">Need Help?</h4>
-                     <p className="text-gray-500">Our experts are here to guide you through the process.</p>
+                     <h4 className="text-xl font-bold text-[#073B3A]">Quick Contact</h4>
+                     <p className="text-gray-500">Available 24/7 for your housing needs in Vasai-Virar.</p>
                      <div className="space-y-4 font-bold text-[#073B3A]">
-                        <a href="tel:(234)345-4574" className="flex items-center hover:text-[#D4ED31] transition-colors"><Phone className="w-5 h-5 mr-3" /> (234) 345-4574</a>
-                        <a href="mailto:info@99homes.com" className="flex items-center hover:text-[#D4ED31] transition-colors"><Mail className="w-5 h-5 mr-3" /> info@99homes.com</a>
+                        <a href="tel:+919168554428" className="flex items-center hover:text-[#D4ED31] transition-colors"><Phone className="w-5 h-5 mr-3" /> +91 9168554428</a>
+                        <a href="mailto:mayur99homes@gmail.com" className="flex items-center hover:text-[#D4ED31] transition-colors"><Mail className="w-5 h-5 mr-3" /> mayur99homes@gmail.com</a>
                      </div>
                   </div>
                </div>
@@ -225,6 +258,9 @@ export default function PropertyDetailsPage() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
     </div>
   );
 }

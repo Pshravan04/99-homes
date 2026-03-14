@@ -12,7 +12,8 @@ import {
   Info, 
   Home, 
   ImageIcon,
-  Plus
+  Plus,
+  ShieldCheck
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -31,10 +32,14 @@ export default function AddPropertyPage() {
     possessionDate: '',
     description: '',
     propertyType: 'Apartment',
+    reraNumber: '',
+    reraQrCode: '',
     amenities: [] as string[]
   });
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [reraQrFile, setReraQrFile] = useState<File | null>(null);
+  const [reraQrPreview, setReraQrPreview] = useState<string>('');
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -55,6 +60,14 @@ export default function AddPropertyPage() {
         ? prev.amenities.filter(a => a !== amenity)
         : [...prev.amenities, amenity]
     }));
+  };
+
+  const handleReraQrChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setReraQrFile(file);
+      setReraQrPreview(URL.createObjectURL(file));
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,6 +101,10 @@ export default function AddPropertyPage() {
     images.forEach(image => {
       data.append('images', image);
     });
+
+    if (reraQrFile) {
+      data.append('reraQrCode', reraQrFile);
+    }
 
     try {
       const res = await fetch(API_URL, {
@@ -180,10 +197,8 @@ export default function AddPropertyPage() {
                    className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all appearance-none"
                 >
                   <option>Apartment</option>
-                  <option>Villa</option>
-                  <option>Flat</option>
-                  <option>Commercial</option>
-                  <option>Penthouse</option>
+                  <option>Tower</option>
+                  <option>Building</option>
                 </select>
               </div>
             </div>
@@ -261,6 +276,56 @@ export default function AddPropertyPage() {
                 placeholder="Describe the property highlights, neighborhood, and unique features..."
                 className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all resize-none"
               ></textarea>
+            </div>
+          </section>
+
+          {/* MahaRERA Section */}
+          <section className="bg-[#073B3A] p-8 rounded-3xl shadow-xl border border-white/10 space-y-8 text-white">
+            <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+               <div className="p-2 bg-[#D4ED31]/10 rounded-lg text-[#D4ED31]">
+                  <ShieldCheck className="w-5 h-5" />
+               </div>
+               <h2 className="text-xl font-bold">MahaRERA Registration</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">RERA Registration No.</label>
+                    <input 
+                      type="text" 
+                      name="reraNumber" 
+                      value={formData.reraNumber} 
+                      onChange={handleChange}
+                      placeholder="e.g. P99000012345"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all text-white placeholder:text-white/20"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-400">Enter the official MahaRERA registration number for this project.</p>
+               </div>
+
+               <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">RERA QR Code</label>
+                  <div className="flex items-center gap-6">
+                     <label className="flex-1 bg-white/5 border-2 border-dashed border-white/10 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-[#D4ED31] hover:bg-white/10 transition-all group">
+                        <Upload className="w-8 h-8 mb-2 text-white/40 group-hover:text-[#D4ED31]" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-white/40 group-hover:text-white">Upload QR Image</span>
+                        <input type="file" onChange={handleReraQrChange} className="hidden" accept="image/*" />
+                     </label>
+                     {reraQrPreview && (
+                       <div className="relative w-28 h-28 bg-white p-2 rounded-xl shadow-lg shrink-0 overflow-hidden">
+                          <img src={reraQrPreview} className="w-full h-full object-contain" alt="RERA QR Preview" />
+                          <button 
+                            type="button" 
+                            onClick={() => { setReraQrFile(null); setReraQrPreview(''); }}
+                            className="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-md"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                       </div>
+                     )}
+                  </div>
+               </div>
             </div>
           </section>
 
