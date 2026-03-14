@@ -36,13 +36,13 @@ const Navbar = () => {
       <div className="hidden lg:block bg-[#073B3A] text-white py-2 border-b border-white/10">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-6">
-            <a href="mailto:99Homes@gmail.com" className="flex items-center hover:text-[#D4ED31] transition-colors">
+            <a href="mailto:mayur99homes@gmail.com" className="flex items-center hover:text-[#D4ED31] transition-colors">
               <Mail className="w-4 h-4 mr-2" />
-              99Homes@gmail.com
+              mayur99homes@gmail.com
             </a>
-            <a href="tel:(234)345-4574" className="flex items-center hover:text-[#D4ED31] transition-colors">
+            <a href="tel:+919168554428" className="flex items-center hover:text-[#D4ED31] transition-colors">
               <Phone className="w-4 h-4 mr-2" />
-              (234) 345-4574
+              +91 9168554428
             </a>
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-2" />
