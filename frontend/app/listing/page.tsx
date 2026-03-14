@@ -19,6 +19,7 @@ interface Property {
   propertyType: string;
   images: string[];
   amenities: string[];
+  slug?: string;
 }
 
 export default function ListingPage() {

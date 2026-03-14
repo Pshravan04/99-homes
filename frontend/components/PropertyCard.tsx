@@ -10,14 +10,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
 
 interface PropertyProps {
   property: {
-    _id: string;
-    name: string;
-    location: string;
-    price: string;
-    configuration?: string;
-    area?: string;
-    possessionDate?: string;
     images: string[];
+    slug?: string;
   };
 }
 
