@@ -266,9 +266,5 @@ export default function PropertyDetailsPage() {
           </div>
         </div>
       </section>
-    </div>
-  );
-}
-    </div>
   );
 }
