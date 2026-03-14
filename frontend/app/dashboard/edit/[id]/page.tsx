@@ -1,0 +1,418 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { 
+  ArrowLeft, 
+  Upload, 
+  X, 
+  Save, 
+  MapPin, 
+  Info, 
+  Home, 
+  ImageIcon,
+  Plus
+} from 'lucide-react';
+import Link from 'next/link';
+
+const API_URL = 'http://localhost:5000/api/properties';
+
+export default function EditPropertyPage() {
+  const router = useRouter();
+  const params = useParams();
+  const id = params.id;
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    location: '',
+    address: '',
+    price: '',
+    configuration: '',
+    area: '',
+    possessionDate: '',
+    description: '',
+    propertyType: 'Apartment',
+    amenities: [] as string[]
+  });
+  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [newImages, setNewImages] = useState<File[]>([]);
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+    if (!isLoggedIn) {
+      router.push('/dashboard/login');
+      return;
+    }
+
+    if (id) {
+      fetchProperty();
+    }
+  }, [id, router]);
+
+  const fetchProperty = async () => {
+    try {
+      const res = await fetch(`${API_URL}/${id}`);
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const data = await res.json();
+        setFormData({
+          name: data.name || '',
+          location: data.location || '',
+          address: data.address || '',
+          price: data.price || '',
+          configuration: data.configuration || '',
+          area: data.area || '',
+          possessionDate: data.possessionDate || '',
+          description: data.description || '',
+          propertyType: data.propertyType || 'Apartment',
+          amenities: data.amenities || []
+        });
+        setExistingImages(data.images || []);
+      } else {
+        console.error("Received non-JSON response from properties API");
+        alert('Error loading property data: Invalid server response');
+      }
+    } catch (err) {
+      console.error('Fetch error:', err);
+      alert('Error loading property data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAmenityChange = (amenity: string) => {
+    setFormData(prev => ({
+      ...prev,
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter(a => a !== amenity)
+        : [...prev.amenities, amenity]
+    }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setNewImages(prev => [...prev, ...files]);
+      setNewPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+    }
+  };
+
+  const removeNewImage = (index: number) => {
+    setNewImages(prev => prev.filter((_, i) => i !== index));
+    setNewPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeExistingImage = (index: number) => {
+    setExistingImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+
+    const data = new FormData();
+    Object.keys(formData).forEach(key => {
+      if (key === 'amenities') {
+        formData.amenities.forEach(amenity => data.append('amenities', amenity));
+      } else {
+        data.append(key, (formData as any)[key]);
+      }
+    });
+
+    // Send remaining existing image paths
+    existingImages.forEach(img => data.append('existingImages', img));
+    
+    // Add new image files
+    newImages.forEach(img => data.append('images', img));
+
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: 'PATCH',
+        body: data,
+      });
+
+      if (res.ok) {
+        router.push('/dashboard');
+      } else {
+        alert('Failed to update property');
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      alert('Connection error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return (
+    <div className="min-h-screen bg-white flex items-center justify-center">
+       <div className="w-12 h-12 border-4 border-[#D4ED31] border-t-[#073B3A] rounded-full animate-spin" />
+    </div>
+  );
+
+  const amenityOptions = [
+    'Car Parking', 'Swimming Pool', 'Gym', 'Garden', 
+    'CCTV Security', 'Lift', 'Club House', 'Power Backup',
+    'Play Area', 'Intercom', 'Fire Safety', 'Gas Pipeline'
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <header className="bg-white border-b px-4 md:px-10 py-6 sticky top-0 z-20 flex items-center gap-6 shadow-sm">
+        <Link href="/dashboard" className="p-2 hover:bg-gray-100 rounded-full transition-colors text-[#073B3A]">
+          <ArrowLeft className="w-6 h-6" />
+        </Link>
+        <h1 className="text-2xl font-bold text-[#073B3A]">Edit Property: <span className="text-gray-400 font-medium">{formData.name}</span></h1>
+      </header>
+
+      <div className="max-w-4xl mx-auto mt-10 px-4">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Basic Info */}
+          <section className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
+            <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
+               <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+                  <Info className="w-5 h-5" />
+               </div>
+               <h2 className="text-xl font-bold text-[#073B3A]">Basic Information</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Property Title*</label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  value={formData.name} 
+                  onChange={handleChange} 
+                  required
+                  className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Price*</label>
+                <input 
+                  type="text" 
+                  name="price" 
+                  value={formData.price} 
+                  onChange={handleChange} 
+                  required
+                  className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Location (Area)*</label>
+                <input 
+                  type="text" 
+                  name="location" 
+                  value={formData.location} 
+                  onChange={handleChange} 
+                  required
+                  className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Property Type*</label>
+                <select 
+                   name="propertyType"
+                   value={formData.propertyType}
+                   onChange={handleChange}
+                   className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all appearance-none"
+                >
+                  <option>Apartment</option>
+                  <option>Villa</option>
+                  <option>Flat</option>
+                  <option>Commercial</option>
+                  <option>Penthouse</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Full Address*</label>
+              <div className="relative">
+                <MapPin className="absolute left-4 top-4 w-5 h-5 text-[#D4ED31]" />
+                <textarea 
+                  name="address" 
+                  value={formData.address} 
+                  onChange={handleChange} 
+                  required
+                  rows={2}
+                  className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 pl-12 pr-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all"
+                ></textarea>
+              </div>
+            </div>
+          </section>
+
+          {/* Details Section */}
+          <section className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
+            <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
+               <div className="p-2 bg-purple-50 rounded-lg text-purple-600">
+                  <Home className="w-5 h-5" />
+               </div>
+               <h2 className="text-xl font-bold text-[#073B3A]">Specifications & Details</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Configuration*</label>
+                <input 
+                  type="text" 
+                  name="configuration" 
+                  value={formData.configuration} 
+                  onChange={handleChange}
+                  className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Area (SQFT)*</label>
+                <input 
+                  type="text" 
+                  name="area" 
+                  value={formData.area} 
+                  onChange={handleChange}
+                  className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Possession Date*</label>
+                <input 
+                  type="text" 
+                  name="possessionDate" 
+                  value={formData.possessionDate} 
+                  onChange={handleChange}
+                  className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Description*</label>
+              <textarea 
+                name="description" 
+                value={formData.description} 
+                onChange={handleChange} 
+                required
+                rows={6}
+                className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 px-6 focus:ring-2 focus:ring-[#D4ED31] outline-none transition-all resize-none"
+              ></textarea>
+            </div>
+          </section>
+
+          {/* Amenities Section */}
+          <section className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
+            <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
+               <div className="p-2 bg-[#D4ED31]/10 rounded-lg text-[#073B3A]">
+                  <Plus className="w-5 h-5" />
+               </div>
+               <h2 className="text-xl font-bold text-[#073B3A]">Amenities</h2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {amenityOptions.map((amenity) => (
+                <button
+                  key={amenity}
+                  type="button"
+                  onClick={() => handleAmenityChange(amenity)}
+                  className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-sm font-bold ${
+                    formData.amenities.includes(amenity)
+                      ? 'bg-[#073B3A] border-[#073B3A] text-white'
+                      : 'bg-gray-50 border-gray-100 text-[#073B3A] hover:border-[#D4ED31]'
+                  }`}
+                >
+                  <div className={`w-2 h-2 rounded-full ${formData.amenities.includes(amenity) ? 'bg-[#D4ED31]' : 'bg-gray-300'}`} />
+                  {amenity}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {/* Images Section */}
+          <section className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
+            <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
+               <div className="p-2 bg-orange-50 rounded-lg text-orange-600">
+                  <ImageIcon className="w-5 h-5" />
+               </div>
+               <h2 className="text-xl font-bold text-[#073B3A]">Property Images</h2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {/* Existing Images */}
+              {existingImages.map((img, i) => (
+                <div key={`exist-${i}`} className="relative aspect-video rounded-2xl overflow-hidden shadow-md group">
+                   <img src={`http://localhost:5000${img}`} className="w-full h-full object-cover" alt="Existing" />
+                   <button 
+                    type="button" 
+                    onClick={() => removeExistingImage(i)}
+                    className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+              
+              {/* New Previews */}
+              {newPreviews.map((preview, i) => (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  key={`new-${i}`} 
+                  className="relative aspect-video rounded-2xl overflow-hidden shadow-md group ring-2 ring-[#D4ED31]"
+                >
+                  <img src={preview} className="w-full h-full object-cover" alt="New Preview" />
+                  <button 
+                    type="button" 
+                    onClick={() => removeNewImage(i)}
+                    className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                  <div className="absolute top-2 left-2 bg-[#D4ED31] text-[#073B3A] text-[8px] font-black uppercase px-2 py-0.5 rounded">New</div>
+                </motion.div>
+              ))}
+
+              <label className="aspect-video bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-[#D4ED31] hover:bg-white transition-all text-gray-400 hover:text-[#073B3A]">
+                <Upload className="w-8 h-8 mb-2" />
+                <span className="text-xs font-bold uppercase tracking-wider">Add More</span>
+                <input type="file" multiple onChange={handleImageChange} className="hidden" accept="image/*" />
+              </label>
+            </div>
+            <p className="text-xs text-gray-400 text-center">Manage existing photos or upload new ones. First image remains the cover photo.</p>
+          </section>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col md:flex-row gap-4">
+             <button 
+                type="submit" 
+                disabled={saving}
+                className="flex-1 bg-[#D4ED31] text-[#073B3A] py-5 rounded-2xl font-black text-xl flex items-center justify-center gap-3 hover:bg-[#073B3A] hover:text-white transition-all transform active:scale-95 shadow-2xl shadow-[#D4ED31]/20 disabled:opacity-50"
+             >
+                {saving ? (
+                  <div className="w-8 h-8 border-4 border-[#073B3A] border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    Update Property Listing
+                    <Save className="w-6 h-6" />
+                  </>
+                )}
+             </button>
+             <Link 
+                href="/dashboard" 
+                className="bg-white text-gray-400 py-5 px-10 rounded-2xl font-bold text-center border border-gray-100 hover:bg-gray-50 hover:text-[#073B3A] transition-all"
+             >
+               Cancel Changes
+             </Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
