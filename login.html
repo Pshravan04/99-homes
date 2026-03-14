@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - 99 Homes</title>
+  <link rel="stylesheet" href="assets/css/plugins/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    .login-container {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #073B3A 0%, #030E0F 100%);
+    }
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-card img {
+      width: 150px;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .form-control {
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid #ddd;
+    }
+    .theme-btn1 {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border: none;
+      background: #073B3A;
+      color: white;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .theme-btn1:hover {
+      background: #0a4f4e;
+    }
+    .error-msg {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <a href="index.html"><img src="assets/img/newimg/logowhite.png" alt="99 Homes" style="filter: invert(1);"></a>
+      <h3>Admin Access</h3>
+      <p class="text-muted">Enter credentials to manage properties</p>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="username" class="form-control" placeholder="admin" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="theme-btn1">Login Now</button>
+        <div id="errorMsg" class="error-msg">Invalid username or password</div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+
+      try {
+        const response = await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          localStorage.setItem('adminLoggedIn', 'true');
+          window.location.href = 'dashboard.html';
+        } else {
+          errorMsg.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        // Fallback for local testing if server is not up
+        if (username === 'admin' && password === 'list admin') {
+            localStorage.setItem('adminLoggedIn', 'true');
+            window.location.href = 'dashboard.html';
+        } else {
+            errorMsg.style.display = 'block';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
