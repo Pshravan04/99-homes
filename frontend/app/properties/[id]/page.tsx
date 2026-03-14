@@ -185,9 +185,9 @@ export default function PropertyDetailsPage() {
                   <div className="bg-[#073B3A] text-white p-8 rounded-2xl shadow-xl">
                     <h3 className="text-2xl font-bold mb-6">Inquiry About Home</h3>
                     <form className="space-y-4">
-                       <input type="text" placeholder="Your Name" className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]" />
-                       <input type="email" placeholder="Email Address" className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]" />
-                       <textarea rows={4} placeholder="Your Message" className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]"></textarea>
+                       <input type="text" placeholder="Your Name" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]" />
+                       <input type="email" placeholder="Email Address" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]" />
+                       <textarea rows={4} placeholder="Your Message" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]"></textarea>
                        <button className="w-full bg-[#D4ED31] text-[#073B3A] py-3.5 rounded-lg font-bold hover:bg-white transition-all transform active:scale-95">Send Inquiry</button>
                     </form>
                   </div>

@@ -62,7 +62,10 @@ export default function ListingPage() {
                       <label className="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-2">Location</label>
                       <div className="relative">
                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                        <select className="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 pl-10 pr-4 focus:ring-2 focus:ring-[#D4ED31] outline-none appearance-none font-medium">
+                        <select 
+                          suppressHydrationWarning
+                          className="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 pl-10 pr-4 focus:ring-2 focus:ring-[#D4ED31] outline-none appearance-none font-medium"
+                        >
                           <option>Vasai-Virar</option>
                           <option>Nallasopara</option>
                           <option>Naigaon</option>

@@ -76,6 +76,7 @@ export default function Home() {
                 <input 
                   type="text" 
                   placeholder="Street, City, Zip..." 
+                  suppressHydrationWarning
                   className="bg-transparent border-none focus:ring-0 text-white placeholder-gray-400 w-full py-3"
                 />
               </div>

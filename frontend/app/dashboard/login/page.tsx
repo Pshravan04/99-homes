@@ -99,6 +99,7 @@ export default function AdminLoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 autoFocus
+                suppressHydrationWarning
                 className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-[#D4ED31] focus:bg-white transition-all outline-none"
                 placeholder="admin"
                 required
@@ -114,6 +115,7 @@ export default function AdminLoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                suppressHydrationWarning
                 className="w-full bg-gray-50 border border-gray-100 rounded-xl py-4 pl-12 pr-12 focus:ring-2 focus:ring-[#D4ED31] focus:bg-white transition-all outline-none"
                 placeholder="••••••••"
                 required
