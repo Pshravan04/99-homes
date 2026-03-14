@@ -188,7 +188,12 @@ export default function PropertyDetailsPage() {
                        <input type="text" placeholder="Your Name" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]" />
                        <input type="email" placeholder="Email Address" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]" />
                        <textarea rows={4} placeholder="Your Message" suppressHydrationWarning className="w-full bg-white/10 border border-white/20 rounded-lg py-3 px-4 focus:outline-none focus:border-[#D4ED31]"></textarea>
-                       <button className="w-full bg-[#D4ED31] text-[#073B3A] py-3.5 rounded-lg font-bold hover:bg-white transition-all transform active:scale-95">Send Inquiry</button>
+                       <button 
+                         suppressHydrationWarning
+                         className="w-full bg-[#D4ED31] text-[#073B3A] py-3.5 rounded-lg font-bold hover:bg-white transition-all transform active:scale-95"
+                       >
+                         Send Inquiry
+                       </button>
                     </form>
                   </div>
 

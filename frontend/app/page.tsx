@@ -80,7 +80,10 @@ export default function Home() {
                   className="bg-transparent border-none focus:ring-0 text-white placeholder-gray-400 w-full py-3"
                 />
               </div>
-              <button className="bg-[#D4ED31] text-[#073B3A] px-8 py-3 rounded-lg font-bold hover:bg-white transition-all transform hover:scale-105 active:scale-95 shadow-lg">
+              <button 
+                suppressHydrationWarning
+                className="bg-[#D4ED31] text-[#073B3A] px-8 py-3 rounded-lg font-bold hover:bg-white transition-all transform hover:scale-105 active:scale-95 shadow-lg"
+              >
                 Search Now
               </button>
             </motion.div>

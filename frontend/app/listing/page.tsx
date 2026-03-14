@@ -74,7 +74,10 @@ export default function ListingPage() {
                       </div>
                     </div>
                     {/* Add more filters here as needed */}
-                    <button className="w-full bg-[#073B3A] text-white py-3 rounded-lg font-bold hover:bg-[#D4ED31] hover:text-[#073B3A] transition-all">
+                    <button 
+                      suppressHydrationWarning
+                      className="w-full bg-[#073B3A] text-white py-3 rounded-lg font-bold hover:bg-[#D4ED31] hover:text-[#073B3A] transition-all"
+                    >
                       Apply Filters
                     </button>
                  </div>
