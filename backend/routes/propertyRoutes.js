@@ -29,6 +29,30 @@ async function uploadToImgBB(buffer, originalname) {
     return data.data.url; // Returns the direct image URL
 }
 
+// Helper: Create a slug from a string
+function createSlug(name) {
+    return name
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+// Helper: Ensure slug is unique
+async function getUniqueSlug(name, model, excludeId = null) {
+    let slug = createSlug(name);
+    let count = 0;
+    while (true) {
+        const query = { slug: count === 0 ? slug : `${slug}-${count}` };
+        if (excludeId) query._id = { $ne: excludeId };
+        
+        const existing = await model.findOne(query);
+        if (!existing) return count === 0 ? slug : `${slug}-${count}`;
+        count++;
+    }
+}
+
 // @route   GET /api/properties
 // @desc    Get all properties
 router.get('/', async (req, res) => {
@@ -40,11 +64,23 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @route   GET /api/properties/:id
-// @desc    Get property by ID
-router.get('/:id', async (req, res) => {
+// @route   GET /api/properties/:idOrSlug
+// @desc    Get property by ID or Slug
+router.get('/:idOrSlug', async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id);
+        const { idOrSlug } = req.params;
+        let property;
+        
+        // Try finding by ID first if it looks like an ObjectId
+        if (idOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
+            property = await Property.findById(idOrSlug);
+        }
+        
+        // If not found by ID or not an ID, try searching by slug
+        if (!property) {
+            property = await Property.findOne({ slug: idOrSlug });
+        }
+
         if (!property) return res.status(404).json({ message: 'Property not found' });
         res.json(property);
     } catch (err) {
@@ -67,8 +103,20 @@ router.post('/', upload.array('images', 10), async (req, res) => {
             }
         }
 
+        // Upload RERA QR code if provided
+        let reraQrUrl = '';
+        if (req.files) {
+            const qrFile = req.files.find(f => f.fieldname === 'reraQrCode');
+            if (qrFile) {
+                reraQrUrl = await uploadToImgBB(qrFile.buffer, 'rera-qr');
+            }
+        }
+
+        const propertySlug = await getUniqueSlug(name, Property);
+
         const newProperty = new Property({
             name,
+            slug: propertySlug,
             location,
             address,
             configuration,
@@ -79,7 +127,9 @@ router.post('/', upload.array('images', 10), async (req, res) => {
             propertyType,
             area,
             units,
-            images: imageUrls // Now stores full ImgBB URLs
+            images: imageUrls, // Now stores full ImgBB URLs
+            reraNumber: req.body.reraNumber,
+            reraQrCode: reraQrUrl
         });
 
         const savedProperty = await newProperty.save();
@@ -101,10 +151,33 @@ router.delete('/:id', async (req, res) => {
 });
 
 // @route   PATCH /api/properties/:id
-// @desc    Update property status or details
-router.patch('/:id', async (req, res) => {
+// @desc    Update property details
+router.patch('/:id', upload.array('images', 10), async (req, res) => {
     try {
-        const updatedProperty = await Property.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updates = { ...req.body };
+        
+        // Handle image updates if any
+        if (req.files && req.files.length > 0) {
+            const currentProperty = await Property.findById(req.params.id);
+            const newImageUrls = [];
+            for (const file of req.files) {
+                const url = await uploadToImgBB(file.buffer, file.originalname);
+                newImageUrls.push(url);
+            }
+            updates.images = [...(currentProperty.images || []), ...newImageUrls];
+        }
+
+        // Generate new slug if name is being updated
+        if (updates.name) {
+            updates.slug = await getUniqueSlug(updates.name, Property, req.params.id);
+        }
+
+        // Handle amenities splitting if it comes as string
+        if (updates.amenities && typeof updates.amenities === 'string') {
+            updates.amenities = updates.amenities.split(',');
+        }
+
+        const updatedProperty = await Property.findByIdAndUpdate(req.params.id, updates, { new: true });
         res.json(updatedProperty);
     } catch (err) {
         res.status(400).json({ message: err.message });

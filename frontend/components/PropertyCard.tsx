@@ -146,7 +146,7 @@ const PropertyCard = ({ property }: PropertyProps) => {
         {/* Action Buttons */}
         <div className="flex gap-3">
           <Link 
-            href={`/properties/${property._id}`}
+            href={`/properties/${property.slug || property._id}`}
             className="flex-1 bg-[#073B3A] text-white py-2.5 rounded-lg text-sm font-bold text-center hover:bg-[#D4ED31] hover:text-[#073B3A] transition-all flex items-center justify-center group/btn shadow-md hover:shadow-lg"
           >
             Read More

@@ -21,6 +21,7 @@ interface Property {
   propertyType: string;
   images: string[];
   amenities: string[];
+  slug?: string;
   reraNumber?: string;
   reraQrCode?: string;
 }
@@ -48,6 +49,12 @@ export default function PropertyDetailsPage() {
         if (res.ok) {
           const data = await res.json();
           setProperty(data);
+          
+          // If we accessed via ID but it has a slug, optionally redirect to slug URL
+          // But for now just display
+          if (data.slug && id === data._id) {
+             window.history.replaceState(null, '', `/properties/${data.slug}`);
+          }
         }
       } catch (err) {
         console.error('Error fetching property details:', err);

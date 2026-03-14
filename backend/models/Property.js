@@ -16,6 +16,7 @@ const PropertySchema = new mongoose.Schema({
     units: { type: Number },
     reraNumber: { type: String },
     reraQrCode: { type: String }, // URL to RERA QR code image
+    slug: { type: String, unique: true, lowercase: true },
     createdAt: { type: Date, default: Date.now }
 });
 
