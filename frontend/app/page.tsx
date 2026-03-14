@@ -139,7 +139,7 @@ export default function Home() {
               {/* Founder Image */}
               <div className="md:w-2/5 relative h-[400px] md:h-auto">
                 <img 
-                  src="/assets/img/founder/mayur.jpg" 
+                  src="/assets/img/founder/mayur_founder.jpg" 
                   alt="Mayur - Founder of 99 Homes" 
                   className="w-full h-full object-cover"
                 />
