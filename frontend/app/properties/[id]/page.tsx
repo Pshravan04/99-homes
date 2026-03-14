@@ -38,6 +38,7 @@ export default function PropertyDetailsPage() {
   const resolveImage = (src: string) => {
     if (!src) return '/assets/img/all-images/property/prop-img1.png';
     if (src.startsWith('http')) return src;
+    if (src.startsWith('/assets')) return src;
     return `${BASE_URL}${src}`;
   };
 

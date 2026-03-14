@@ -10,6 +10,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000';
 
 interface PropertyProps {
   property: {
+    _id: string;
+    name: string;
+    location: string;
+    price: string;
+    configuration?: string;
+    area?: string;
+    possessionDate?: string;
     images: string[];
     slug?: string;
   };
@@ -21,8 +28,9 @@ const PropertyCard = ({ property }: PropertyProps) => {
   // ImgBB returns full URLs (https://i.ibb.co/...), legacy local images use /uploads/...
   const resolveImage = (src: string) => {
     if (!src) return '/assets/img/all-images/property/prop-img1.png';
-    if (src.startsWith('http')) return src; // ImgBB or any absolute URL
-    return `${BASE_URL}${src}`; // Legacy local path fallback
+    if (src.startsWith('http')) return src; // External URL
+    if (src.startsWith('/assets')) return src; // Frontend asset
+    return `${BASE_URL}${src}`; // Backend upload or other
   };
 
   const images = property.images && property.images.length > 0 
