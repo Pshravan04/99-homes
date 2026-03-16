@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import LeadPopup from "@/components/LeadPopup";
 
 export const metadata: Metadata = {
   title: "99 Homes - Premium Real Estate in Vasai-Virar",
@@ -35,6 +36,7 @@ export default function RootLayout({
         <main className="min-h-screen">
           {children}
         </main>
+        <LeadPopup />
         <Footer />
       </body>
     </html>
