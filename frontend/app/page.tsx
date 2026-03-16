@@ -139,7 +139,7 @@ export default function Home() {
               {/* Founder Image */}
               <div className="md:w-2/5 relative h-[480px] md:h-auto">
                 <img
-                  src="/assets/img/founder/mayur_founder2.jpg"
+                  src="/assets/img/all-images/about/mayur.jpeg"
                   alt="Mayur - Founder of 99 Homes"
                   className="w-full h-full object-cover object-top"
                 />
@@ -250,7 +250,7 @@ export default function Home() {
             <div className="lg:w-1/2 relative">
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#D4ED31]/10 rounded-full blur-3xl animate-pulse" />
               <img
-                src="/assets/img/all-images/property/property-img1.png"
+                src="/assets/img/all-images/properties/property-img14.png"
                 alt="Luxury Home"
                 className="rounded-2xl shadow-2xl relative z-10 w-full h-auto"
               />

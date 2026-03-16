@@ -14,7 +14,7 @@ const Footer = () => {
           <div className="space-y-6">
             <Link href="/" className="relative block w-48 h-16">
               <Image
-                src="/assets/img/newimg/logo_99homes.png"
+                src="/assets/img/logo/main-logo.png"
                 alt="99 Homes"
                 fill
                 className="object-contain brightness-0 invert"
