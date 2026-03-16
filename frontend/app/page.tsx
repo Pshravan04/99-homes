@@ -51,16 +51,16 @@ export default function Home() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-[#073B3A] via-[#073B3A]/80 to-transparent z-10" />
-          <img 
-            src="/assets/img/newimg/hero4.jpg" 
-            alt="Hero Background" 
+          <img
+            src="/assets/img/newimg/hero4.jpg"
+            alt="Hero Background"
             className="w-full h-full object-cover"
           />
         </div>
 
         <div className="container mx-auto px-4 relative z-20 text-white">
           <div className="max-w-3xl space-y-8">
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -68,7 +68,7 @@ export default function Home() {
             >
               Find Your <span className="text-[#D4ED31]">Dream Home</span> in Vasai-Virar
             </motion.h1>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -78,7 +78,7 @@ export default function Home() {
             </motion.p>
 
             {/* Premium Search Bar */}
-            <motion.form 
+            <motion.form
               onSubmit={handleSearch}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -87,21 +87,21 @@ export default function Home() {
             >
               <div className="flex-1 flex items-center px-4 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors">
                 <Search className="w-5 h-5 text-[#D4ED31] mr-3" />
-                <input 
-                  type="text" 
-                  placeholder="Search by name, location..." 
+                <input
+                  type="text"
+                  placeholder="Search by name, location..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   suppressHydrationWarning
                   className="bg-transparent border-none focus:ring-0 text-white placeholder-gray-400 w-full py-3"
                 />
               </div>
-            <button 
-              type="submit"
-              className="bg-[#D4ED31] text-[#073B3A] px-8 py-3 rounded-lg font-bold hover:bg-white transition-all transform hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center"
-            >
-              Search Now
-            </button>
+              <button
+                type="submit"
+                className="bg-[#D4ED31] text-[#073B3A] px-8 py-3 rounded-lg font-bold hover:bg-white transition-all transform hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center"
+              >
+                Search Now
+              </button>
             </motion.form>
           </div>
         </div>
@@ -138,16 +138,11 @@ export default function Home() {
             <div className="flex flex-col md:flex-row">
               {/* Founder Image */}
               <div className="md:w-2/5 relative h-[480px] md:h-auto">
-                <img 
-                  src="/assets/img/founder/mayur_founder2.jpg" 
-                  alt="Mayur - Founder of 99 Homes" 
+                <img
+                  src="/assets/img/founder/mayur_founder2.jpg"
+                  alt="Mayur - Founder of 99 Homes"
                   className="w-full h-full object-cover object-top"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#073B3A]/80 to-transparent md:bg-gradient-to-r" />
-                <div className="absolute bottom-8 left-8 text-white md:hidden">
-                  <h3 className="text-3xl font-bold">Mayur</h3>
-                  <p className="text-[#D4ED31] font-medium tracking-widest uppercase text-sm">Founder, 99 Homes</p>
-                </div>
               </div>
 
               {/* Founder Details */}
@@ -219,7 +214,7 @@ export default function Home() {
               <h2 className="text-4xl md:text-5xl font-bold text-[#073B3A]">Featured Properties</h2>
             </div>
             <a href="/listing" className="text-[#073B3A] font-bold hover:text-[#D4ED31] transition-colors flex items-center group">
-              View All Properties 
+              View All Properties
               <span className="ml-2 w-8 h-8 rounded-full bg-[#D4ED31] flex items-center justify-center group-hover:bg-[#073B3A] group-hover:text-white transition-all">
                 <Search className="w-4 h-4" />
               </span>
@@ -233,7 +228,7 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -253,23 +248,23 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2 relative">
-               <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#D4ED31]/10 rounded-full blur-3xl animate-pulse" />
-               <img 
-                 src="/assets/img/all-images/property/property-img1.png" 
-                 alt="Luxury Home" 
-                 className="rounded-2xl shadow-2xl relative z-10 w-full h-auto"
-               />
-               <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl z-20 hidden md:block border border-gray-100">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-[#D4ED31] rounded-full flex items-center justify-center">
-                      <ShieldCheck className="w-6 h-6 text-[#073B3A]" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Verified by</p>
-                      <p className="text-lg font-bold text-[#073B3A]">99 Homes Trust</p>
-                    </div>
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#D4ED31]/10 rounded-full blur-3xl animate-pulse" />
+              <img
+                src="/assets/img/all-images/property/property-img1.png"
+                alt="Luxury Home"
+                className="rounded-2xl shadow-2xl relative z-10 w-full h-auto"
+              />
+              <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl z-20 hidden md:block border border-gray-100">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-[#D4ED31] rounded-full flex items-center justify-center">
+                    <ShieldCheck className="w-6 h-6 text-[#073B3A]" />
                   </div>
-               </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Verified by</p>
+                    <p className="text-lg font-bold text-[#073B3A]">99 Homes Trust</p>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="lg:w-1/2 space-y-8">
               <span className="text-[#D4ED31] font-bold uppercase tracking-widest text-sm">Our Expertise</span>
@@ -277,15 +272,15 @@ export default function Home() {
               <p className="text-gray-600 text-lg leading-relaxed">
                 We don't just sell houses; we help you find the place where your life unfolds. Our local expertise in Vasai-Virar ensures you get the best value and neighborhood insights.
               </p>
-              
+
               <div className="space-y-6">
                 {[
                   { icon: Building2, title: 'Premium Selection', desc: 'Handpicked luxury properties for every budget.' },
                   { icon: MapPin, title: 'Local Expertise', desc: 'Deep roots and specialized knowledge of Vasai-Virar.' },
                   { icon: Users2, title: 'Client First', desc: 'Personalized service that puts your needs above all.' },
                 ].map((item, idx) => (
-                  <motion.div 
-                    key={idx} 
+                  <motion.div
+                    key={idx}
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}

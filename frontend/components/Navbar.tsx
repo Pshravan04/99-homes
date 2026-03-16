@@ -17,7 +17,7 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
     setIsMounted(true);
-    
+
     // Check admin status
     setIsAdmin(localStorage.getItem('adminLoggedIn') === 'true');
 
@@ -55,11 +55,11 @@ const Navbar = () => {
                 {isAdmin ? (
                   <>
                     <Link href="/dashboard" className="hover:text-[#D4ED31] transition-colors font-bold">Dashboard</Link>
-                    <button 
+                    <button
                       onClick={() => {
                         localStorage.removeItem('adminLoggedIn');
                         window.location.reload();
-                      }} 
+                      }}
                       className="hover:text-red-400 transition-colors"
                     >
                       Logout
@@ -75,15 +75,14 @@ const Navbar = () => {
       </div>
 
       {/* Main Navbar */}
-      <nav className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-lg py-2' : 'bg-white/90 backdrop-blur-md py-4'
-      }`}>
+      <nav className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-lg py-2' : 'bg-white/90 backdrop-blur-md py-4'
+        }`}>
         <div className="container mx-auto px-4 flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="relative w-40 h-10">
-            <Image 
-              src="/assets/img/newimg/new_logo.png" 
-              alt="99 Homes" 
+          <Link href="/" className="relative w-52 h-14">
+            <Image
+              src="/assets/img/newimg/logo_99homes.png"
+              alt="99 Homes"
               fill
               className="object-contain"
               priority
@@ -93,8 +92,8 @@ const Navbar = () => {
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
+              <Link
+                key={link.name}
                 href={link.href}
                 className="text-[#073B3A] font-semibold hover:text-[#D4ED31] transition-colors relative group"
               >
@@ -106,14 +105,14 @@ const Navbar = () => {
 
           {/* Actions */}
           <div className="hidden lg:flex items-center space-x-4">
-            <button 
+            <button
               suppressHydrationWarning
               className="p-2 text-[#073B3A] hover:bg-gray-100 rounded-full transition-colors"
             >
               <Search className="w-5 h-5" />
             </button>
-            <Link 
-              href="/listing" 
+            <Link
+              href="/listing"
               className="bg-[#D4ED31] text-[#073B3A] px-6 py-2.5 rounded-md font-bold flex items-center hover:bg-[#073B3A] hover:text-white transition-all transform hover:scale-105"
             >
               View Listing
@@ -124,7 +123,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button 
+          <button
             className="lg:hidden p-2 text-[#073B3A]"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
@@ -133,13 +132,12 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`lg:hidden absolute top-full left-0 w-full bg-white border-t transition-all duration-300 overflow-hidden ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
+        <div className={`lg:hidden absolute top-full left-0 w-full bg-white border-t transition-all duration-300 overflow-hidden ${isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}>
           <div className="p-4 space-y-4">
             {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
+              <Link
+                key={link.name}
                 href={link.href}
                 className="block text-[#073B3A] font-semibold text-lg hover:text-[#D4ED31]"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -147,8 +145,8 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <Link 
-              href="/listing" 
+            <Link
+              href="/listing"
               className="block bg-[#D4ED31] text-[#073B3A] px-6 py-3 rounded-md font-bold text-center"
               onClick={() => setIsMobileMenuOpen(false)}
             >

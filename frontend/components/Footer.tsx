@@ -12,12 +12,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Logo & About */}
           <div className="space-y-6">
-            <Link href="/" className="relative block w-48 h-12">
-              <Image 
-                src="/assets/img/newimg/logowhite.png" 
-                alt="99 Homes" 
+            <Link href="/" className="relative block w-48 h-16">
+              <Image
+                src="/assets/img/newimg/logo_99homes.png"
+                alt="99 Homes"
                 fill
-                className="object-contain"
+                className="object-contain brightness-0 invert"
               />
             </Link>
             <p className="text-gray-300 leading-relaxed">
@@ -83,9 +83,9 @@ const Footer = () => {
             </h3>
             <p className="text-gray-300">Subscribe for the latest property updates.</p>
             <form className="relative group">
-              <input 
-                type="email" 
-                placeholder="Your Email" 
+              <input
+                type="email"
+                placeholder="Your Email"
                 className="w-full bg-white/5 border border-white/10 rounded-md py-3 px-4 focus:outline-none focus:border-[#D4ED31] transition-all"
               />
               <button className="absolute right-2 top-2 bottom-2 bg-[#D4ED31] text-[#073B3A] px-4 rounded font-bold hover:bg-white transition-all">
@@ -97,7 +97,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-white/10 text-center text-gray-400 text-sm">
-          <p>© 2024 99 Homes. All Rights Reserved. Built with ❤️ for Vasai-Virar.</p>
+          <p>© 2024 99 Homes. All Rights Reserved. Built with ❤️ By{' '}<a href="https://snappify.in/" target="_blank" rel="noopener noreferrer" className="text-[#D4ED31] font-bold hover:underline">Team Snappify</a>.</p>
         </div>
       </div>
     </footer>
