@@ -27,7 +27,9 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Routes
 const propertyRoutes = require('./routes/propertyRoutes');
+const leadRoutes = require('./routes/leadRoutes');
 app.use('/api/properties', propertyRoutes);
+app.use('/api/leads', leadRoutes);
 
 // Admin Login Route
 app.post('/api/login', (req, res) => {
