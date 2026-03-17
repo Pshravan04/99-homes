@@ -11,7 +11,8 @@ const sendToGoogleSheet = async (lead) => {
         return;
     }
     try {
-        await fetch(process.env.GOOGLE_SHEET_URL, {
+        console.log('Sending lead to Google Sheet:', lead.name);
+        const response = await fetch(process.env.GOOGLE_SHEET_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
@@ -22,9 +23,10 @@ const sendToGoogleSheet = async (lead) => {
                 projectStatus: lead.projectStatus
             })
         });
-        console.log('Lead sent to Google Sheet successfully');
+        const result = await response.text();
+        console.log('Google Sheet Response:', result);
     } catch (error) {
-        console.error('Error sending lead to Google Sheet:', error);
+        console.error('Error sending lead to Google Sheet:', error.message);
     }
 };
 

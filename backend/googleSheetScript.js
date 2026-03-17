@@ -40,3 +40,9 @@ function doPost(e) {
             .setMimeType(ContentService.MimeType.JSON);
     }
 }
+
+function doGet() {
+    return ContentService
+        .createTextOutput(JSON.stringify({ status: 'online', message: 'Script is ready to receive data' }))
+        .setMimeType(ContentService.MimeType.JSON);
+}
