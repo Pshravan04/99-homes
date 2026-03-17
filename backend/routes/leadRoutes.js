@@ -2,6 +2,31 @@ const express = require('express');
 const router = express.Router();
 const Lead = require('../models/Lead');
 const nodemailer = require('nodemailer');
+const fetch = require('node-fetch');
+
+// Helper to send to Google Sheets via Apps Script
+const sendToGoogleSheet = async (lead) => {
+    if (!process.env.GOOGLE_SHEET_URL) {
+        console.warn('GOOGLE_SHEET_URL missing. Google Sheet sync skipped.');
+        return;
+    }
+    try {
+        await fetch(process.env.GOOGLE_SHEET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+                name: lead.name,
+                mobile: lead.mobile,
+                configuration: lead.configuration,
+                preferredLocation: lead.preferredLocation,
+                projectStatus: lead.projectStatus
+            })
+        });
+        console.log('Lead sent to Google Sheet successfully');
+    } catch (error) {
+        console.error('Error sending lead to Google Sheet:', error);
+    }
+};
 
 // Helper to send email
 const sendLeadEmail = async (lead) => {
@@ -75,8 +100,9 @@ router.post('/', async (req, res) => {
 
         const savedLead = await newLead.save();
 
-        // Asynchronously send email
+        // Asynchronously send email and sync to Google Sheet
         sendLeadEmail(savedLead);
+        sendToGoogleSheet(savedLead);
 
         res.status(201).json({
             success: true,
