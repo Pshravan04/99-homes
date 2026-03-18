@@ -33,7 +33,7 @@ const PropertyCard = ({ property }: PropertyProps) => {
     return `${BASE_URL}${src}`; // Backend upload or other
   };
 
-  const images = property.images && property.images.length > 0 
+  const images = property.images && property.images.length > 0
     ? property.images.map(resolveImage)
     : ['/assets/img/all-images/property/prop-img1.png'];
 
@@ -60,8 +60,8 @@ const PropertyCard = ({ property }: PropertyProps) => {
             transition={{ duration: 0.3 }}
             className="absolute inset-0"
           >
-            <Image 
-              src={images[currentImgIdx]} 
+            <Image
+              src={images[currentImgIdx]}
               alt={property.name}
               fill
               className="object-cover"
@@ -73,27 +73,26 @@ const PropertyCard = ({ property }: PropertyProps) => {
         {/* Carousel Controls */}
         {images.length > 1 && (
           <>
-            <button 
+            <button
               onClick={prevSlide}
               className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-[#073B3A] opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-20"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <button 
+            <button
               onClick={nextSlide}
               className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-[#073B3A] opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-20"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
-            
+
             {/* Dots */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
               {images.map((_, idx) => (
-                <div 
+                <div
                   key={idx}
-                  className={`w-1.5 h-1.5 rounded-full transition-all ${
-                    idx === currentImgIdx ? 'bg-[#D4ED31] w-3' : 'bg-white/50'
-                  }`}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentImgIdx ? 'bg-[#D4ED31] w-3' : 'bg-white/50'
+                    }`}
                 />
               ))}
             </div>
@@ -147,15 +146,15 @@ const PropertyCard = ({ property }: PropertyProps) => {
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          <Link 
+          <Link
             href={`/properties/${property.slug || property._id}`}
             className="flex-1 bg-[#073B3A] text-white py-2.5 rounded-lg text-sm font-bold text-center hover:bg-[#D4ED31] hover:text-[#073B3A] transition-all flex items-center justify-center group/btn shadow-md hover:shadow-lg"
           >
             Read More
             <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
           </Link>
-          <a 
-            href="https://wa.link/srrb9n"
+          <a
+            href="https://api.whatsapp.com/send?phone=919168554428&text=Hi%2099%20Homes%2C%20I%20have%20a%20property-related%20query.%20Can%20we%20chat%3F"
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 border-2 border-[#073B3A] text-[#073B3A] py-2.5 rounded-lg text-sm font-bold text-center hover:bg-[#073B3A] hover:text-white transition-all flex items-center justify-center shadow-sm hover:shadow-md"

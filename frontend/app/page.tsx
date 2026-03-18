@@ -193,7 +193,7 @@ export default function Home() {
                   <Link href="/contact" className="bg-[#073B3A] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#D4ED31] hover:text-[#073B3A] transition-all shadow-lg">
                     Get In Touch
                   </Link>
-                  <a href="https://wa.link/srrb9n" target="_blank" rel="noopener noreferrer" className="bg-white border-2 border-[#073B3A] text-[#073B3A] px-8 py-3 rounded-xl font-bold hover:bg-[#073B3A] hover:text-white transition-all shadow-md">
+                  <a href="https://api.whatsapp.com/send?phone=919168554428&text=Hi%2099%20Homes%2C%20I%20have%20a%20property-related%20query.%20Can%20we%20chat%3F" target="_blank" rel="noopener noreferrer" className="bg-white border-2 border-[#073B3A] text-[#073B3A] px-8 py-3 rounded-xl font-bold hover:bg-[#073B3A] hover:text-white transition-all shadow-md">
                     WhatsApp Me
                   </a>
                 </div>
