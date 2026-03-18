@@ -26,6 +26,11 @@ const leadSchema = new mongoose.Schema({
         required: true,
         enum: ['Ready', 'Near Possession', 'Under Construction']
     },
+    status: {
+        type: String,
+        default: 'New',
+        enum: ['New', 'Contacted', 'Closed', 'Lost']
+    },
     createdAt: {
         type: Date,
         default: Date.now

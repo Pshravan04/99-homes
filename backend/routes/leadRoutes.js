@@ -2,34 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Lead = require('../models/Lead');
 const nodemailer = require('nodemailer');
-const fetch = require('node-fetch');
-
-// Helper to send to Google Sheets via Apps Script
-const sendToGoogleSheet = async (lead) => {
-    if (!process.env.GOOGLE_SHEET_URL) {
-        console.warn('GOOGLE_SHEET_URL missing. Google Sheet sync skipped.');
-        return;
-    }
-    try {
-        console.log('Sending lead to Google Sheet:', lead.name);
-        const response = await fetch(process.env.GOOGLE_SHEET_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-                name: lead.name,
-                mobile: lead.mobile,
-                configuration: lead.configuration,
-                preferredLocation: lead.preferredLocation,
-                projectStatus: lead.projectStatus
-            })
-        });
-        const result = await response.text();
-        console.log('Google Sheet Response:', result);
-    } catch (error) {
-        console.error('Error sending lead to Google Sheet:', error.message);
-    }
-};
-
 // Helper to send email
 const sendLeadEmail = async (lead) => {
     // Check if email credentials exist
@@ -102,9 +74,8 @@ router.post('/', async (req, res) => {
 
         const savedLead = await newLead.save();
 
-        // Asynchronously send email and sync to Google Sheet
+        // Asynchronously send email
         sendLeadEmail(savedLead);
-        sendToGoogleSheet(savedLead);
 
         res.status(201).json({
             success: true,
@@ -114,6 +85,57 @@ router.post('/', async (req, res) => {
     } catch (error) {
         console.error('Error saving lead:', error);
         res.status(500).json({ success: false, message: 'Server error while saving inquiry' });
+    }
+});
+
+// GET /api/leads - Get all leads (Admin only)
+router.get('/', async (req, res) => {
+    try {
+        const leads = await Lead.find().sort({ createdAt: -1 });
+        res.status(200).json(leads);
+    } catch (error) {
+        console.error('Error fetching leads:', error);
+        res.status(500).json({ success: false, message: 'Server error while fetching leads' });
+    }
+});
+
+// GET /api/leads/:id - Get a single lead
+router.get('/:id', async (req, res) => {
+    try {
+        const lead = await Lead.findById(req.params.id);
+        if (!lead) return res.status(404).json({ success: false, message: 'Lead not found' });
+        res.status(200).json(lead);
+    } catch (error) {
+        console.error('Error fetching lead:', error);
+        res.status(500).json({ success: false, message: 'Server error while fetching lead' });
+    }
+});
+
+// PUT /api/leads/:id - Update a lead
+router.put('/:id', async (req, res) => {
+    try {
+        const updatedLead = await Lead.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true }
+        );
+        if (!updatedLead) return res.status(404).json({ success: false, message: 'Lead not found' });
+        res.status(200).json({ success: true, data: updatedLead });
+    } catch (error) {
+        console.error('Error updating lead:', error);
+        res.status(500).json({ success: false, message: 'Server error while updating lead' });
+    }
+});
+
+// DELETE /api/leads/:id - Delete a lead
+router.delete('/:id', async (req, res) => {
+    try {
+        const deletedLead = await Lead.findByIdAndDelete(req.params.id);
+        if (!deletedLead) return res.status(404).json({ success: false, message: 'Lead not found' });
+        res.status(200).json({ success: true, message: 'Lead deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting lead:', error);
+        res.status(500).json({ success: false, message: 'Server error while deleting lead' });
     }
 });
 
