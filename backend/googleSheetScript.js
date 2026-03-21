@@ -1,11 +1,18 @@
 // =============================================
 // PASTE THIS IN Google Sheet > Extensions > Apps Script
-// Then deploy as a Web App and provide the URL to the backend
+// 1. Replace 'YOUR_SHEET_ID' with: 1OgoIvyOVnejUolFGmLJwV04lPKL9fMQi3jzjKJajFEo
+// 2. Click 'Deploy' -> 'New Deployment'
+// 3. Select Type: 'Web App'
+// 4. Who has access: 'Anyone' (IMPORTANT: Not 'Anyone with Google account')
+// 5. Click 'Deploy' and copy the URL.
 // =============================================
+
+var SHEET_ID = '1OgoIvyOVnejUolFGmLJwV04lPKL9fMQi3jzjKJajFEo';
 
 function doPost(e) {
     try {
-        var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+        var ss = SpreadsheetApp.openById(SHEET_ID);
+        var sheet = ss.getSheets()[0]; // Targets the first tab
 
         // Add headers if sheet is empty
         if (sheet.getLastRow() === 0) {
