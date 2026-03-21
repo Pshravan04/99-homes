@@ -11,7 +11,7 @@ const sendToGoogleSheet = async (lead) => {
         return;
     }
     try {
-        console.log('Sending lead to Google Sheet:', lead.name);
+        console.log('Attempting to sync lead to Google Sheet:', lead.name);
         const response = await fetch(process.env.GOOGLE_SHEET_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain' },
@@ -21,12 +21,18 @@ const sendToGoogleSheet = async (lead) => {
                 configuration: lead.configuration,
                 preferredLocation: lead.preferredLocation,
                 projectStatus: lead.projectStatus
-            })
+            }),
+            redirect: 'follow'
         });
-        const result = await response.text();
-        console.log('Google Sheet Response:', result);
+
+        if (response.ok) {
+            const result = await response.text();
+            console.log('Google Sheet Sync SUCCESS:', result);
+        } else {
+            console.error('Google Sheet Sync FAILED. Status:', response.status);
+        }
     } catch (error) {
-        console.error('Error sending lead to Google Sheet:', error.message);
+        console.error('Google Sheet Sync ERROR:', error.message);
     }
 };
 
