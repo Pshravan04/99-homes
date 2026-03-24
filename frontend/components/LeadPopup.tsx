@@ -25,7 +25,7 @@ const LeadPopup = () => {
             const timer = setTimeout(() => {
                 setIsOpen(true);
                 sessionStorage.setItem('lead_popup_shown', 'true');
-            }, 3000);
+            }, 45000);
             return () => clearTimeout(timer);
         }
     }, []);
